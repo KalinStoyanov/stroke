@@ -1,0 +1,16 @@
+Date: 2025-09-09T17:39:29+03:00
+GPU/Driver:
+NVIDIA GeForce RTX 3060 Ti, 560.94
+Python: 3.11.4
+Torch: 2.8.0+cu126
+Torch CUDA: 12.6
+CUDA available: True
+GPU: NVIDIA GeForce RTX 3060 Ti
+Key packages:
+matplotlib==3.10.6
+numpy==2.1.2
+pandas==2.3.2
+torch==2.8.0+cu126
+torchaudio==2.8.0+cu126
+torchvision==0.23.0+cu126
+tqdm==4.67.1

@@ -1,0 +1,29 @@
+\begin{table}[h]
+\centering
+\begin{tabular}{l l r r r r}
+\toprule
+Protocol & Granularity & Batches & Mean & Min & Max \\
+\midrule
+baseline & channel & 40 & 0.9899 & 0.9688 & 1.0000 \\
+baseline & element & 40 & 0.9899 & 0.9688 & 1.0000 \\
+focal\_ischemia\_left & channel & 40 & 0.9900 & 0.9688 & 1.0000 \\
+focal\_ischemia\_left & element & 40 & 0.8302 & 0.7344 & 0.9375 \\
+focal\_ischemia\_left\_severe & channel & 40 & 0.9891 & 0.9688 & 1.0000 \\
+focal\_ischemia\_left\_severe & element & 40 & 0.6683 & 0.5625 & 0.8164 \\
+global\_hypoperfusion & channel & 40 & 0.9895 & 0.9688 & 1.0000 \\
+global\_hypoperfusion & element & 40 & 0.9895 & 0.9688 & 1.0000 \\
+global\_hypoperfusion\_severe & channel & 40 & 0.9834 & 0.9570 & 1.0000 \\
+global\_hypoperfusion\_severe & element & 40 & 0.9834 & 0.9570 & 1.0000 \\
+patchy\_checker & channel & 40 & 0.9899 & 0.9688 & 1.0000 \\
+patchy\_checker & element & 40 & 0.9856 & 0.9570 & 1.0000 \\
+patchy\_checker\_severe & channel & 40 & 0.9897 & 0.9688 & 1.0000 \\
+patchy\_checker\_severe & element & 40 & 0.9684 & 0.9102 & 1.0000 \\
+spasm\_global & channel & 40 & 0.9896 & 0.9688 & 1.0000 \\
+spasm\_global & element & 40 & 0.9896 & 0.9688 & 1.0000 \\
+spasm\_global\_severe & channel & 40 & 0.9875 & 0.9453 & 1.0000 \\
+spasm\_global\_severe & element & 40 & 0.9875 & 0.9453 & 1.0000 \\
+\bottomrule
+\end{tabular}
+\caption{MNIST accuracy under perfusion protocols. We gate pretrained, frozen CNN activations by $S(v,t)$; no Hebbian terms.}
+\label{tab:mnist_perfusion_protocols}
+\end{table}
