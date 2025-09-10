@@ -1,0 +1,15 @@
+name: Build paper
+on: [push, pull_request]
+jobs:
+  latex:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: paper
+          root_file: NN_stroke_article_14_8_2_JMLR.tex
+      - uses: actions/upload-artifact@v4
+        with:
+          name: paper-pdf
+          path: paper/NN_stroke_article_14_8_2_JMLR.pdf

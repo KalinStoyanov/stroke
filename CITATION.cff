@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+title: "Stress-Sensitive Neurovascular Modulation of Frozen Neural Networks"
+message: "If you use this code or paper, please cite:"
+authors:
+  - family-names: "Stoyanov"
+    given-names: "Kalin"
+    email: "kalin.stoyanov@uctm.edu"
+repository-code: "https://github.com/KalinStoyanov/stroke"
+license: "MIT"
+type: software
+version: "0.1.0"
+keywords: [stroke, ischemia, neurovascular, perfusion, deep-learning, JMLR]
