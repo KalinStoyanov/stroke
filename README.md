@@ -13,3 +13,6 @@ as whole units by local perfusion $\widehat{S}(v,t)$ (vessel size enters through
 
 ## Reproduce paper PDF
 The repo builds the PDF via GitHub Actions; artifacts appear in the Actions tab.
+
+## Build status
+[![Build paper](https://github.com/KalinStoyanov/stroke/actions/workflows/paper.yml/badge.svg)](https://github.com/KalinStoyanov/stroke/actions/workflows/paper.yml)
