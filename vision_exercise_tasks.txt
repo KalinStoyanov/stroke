@@ -1,0 +1,75 @@
+Vision Pattern Recognition Exercise — Perfusion-Gated Evaluation (MNIST)
+==================================================================================
+
+Constraints (as in the article)
+- Pretrained, frozen CNN; evaluation does not update weights.
+- Neurons modulated as whole units by local perfusion S(v,t).
+- Vessel-size effects enter only through S(v,t).
+- No Hebbian or other plasticity terms.
+
+Prereqs
+- Ubuntu, CUDA-enabled NVIDIA GPU (optional but supported).
+- Python 3.10+ recommended.
+- Repo zip from previous message: stroke_vision_exercise.zip
+
+Quick Task List (run in terminal)
+1) Setup environment
+   python3 -m venv .venv && source .venv/bin/activate
+   pip install --upgrade pip
+   pip install -r requirements.txt
+
+2) Train once (freeze for all experiments)
+   python scripts/train_mnist.py --epochs 3 --out checkpoints/mnist_cnn.pt --cuda
+
+3) Baseline sanity check
+   python scripts/eval_protocol.py      --checkpoint checkpoints/mnist_cnn.pt      --protocol data/protocols/baseline.json      --granularity channel --cuda
+
+4) Stress protocols P1–P4
+   # P1: Global hypoperfusion
+   python scripts/eval_protocol.py --checkpoint checkpoints/mnist_cnn.pt      --protocol data/protocols/global_hypoperfusion.json --granularity channel --cuda
+
+   # P2: Focal ischemia (left rectangle)
+   python scripts/eval_protocol.py --checkpoint checkpoints/mnist_cnn.pt      --protocol data/protocols/focal_ischemia_left.json --granularity channel --cuda
+
+   # P3: Patchy vasoconstriction (checkerboard)
+   python scripts/eval_protocol.py --checkpoint checkpoints/mnist_cnn.pt      --protocol data/protocols/patchy_checker.json --granularity channel --cuda
+
+   # P4: Time-varying global spasms
+   python scripts/eval_protocol.py --checkpoint checkpoints/mnist_cnn.pt      --protocol data/protocols/spasm_global.json --granularity channel --cuda
+
+What’s produced
+- results/*.csv : per-batch accuracy (useful for dynamic P4)
+- results/*.png : simple accuracy plot vs. batch index
+- checkpoints/mnist_cnn.pt : pretrained model
+
+Granularity (neuron-as-whole default)
+- --granularity channel : pools S over spatial dims to a single scalar per channel (default, matches whole-unit semantics).
+- --granularity element  : applies S element-wise after resizing to the feature map (use if you need stricter spatial stress).
+
+Layer selection
+- By default, gating hooks are attached to: features.0, features.2, features.5
+- Override with e.g.:
+  --layers "features.0,features.2,features.5"
+
+Protocol summary
+- baseline.json           : S = 1 everywhere (no ischemia)
+- global_hypoperfusion.json : uniform drop in S to 0.6
+- focal_ischemia_left.json  : rectangular left-hemifield S≈0.35 inside, 1.0 outside
+- patchy_checker.json       : checkerboard low/high S
+- spasm_global.json         : triangular wave between baseline and min, period in batches
+
+Repo layout (after unzip)
+src/
+  models/mnist_cnn.py       — small CNN for MNIST
+  utils/perfusion.py        — build S fields from protocol JSON
+  utils/gates.py            — PerfusionGate & GatedWrapper (multiplicative)
+scripts/
+  train_mnist.py            — one-time training
+  eval_protocol.py          — run protocols on frozen model
+data/protocols/             — P1–P4 example JSONs
+checkpoints/                — saved models
+results/                    — metrics/plots
+
+Notes
+- Matches the paper: vessel size influences only via S; no Hebbian rule in this article.
+- You control execution manually; no YAML involved.

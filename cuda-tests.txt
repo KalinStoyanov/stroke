@@ -1,0 +1,60 @@
+# --- Inspect GPU, driver, CUDA toolkit, Python, pip ---
+nvidia-smi --query-gpu=gpu_name,driver_version --format=csv,noheader
+nvcc --version || echo "No system CUDA toolkit (OK for pip wheels)."
+python3 --version
+python3 -m pip --version
+
+# --- Create and activate a clean virtual environment ---
+python3 -m venv .venv && source .venv/bin/activate
+python -m pip install --upgrade pip setuptools wheel
+
+# --- Remove any existing torch packages to avoid conflicts ---
+python -m pip uninstall -y torch torchvision torchaudio
+
+# --- Install PyTorch with bundled CUDA runtime (CHOOSE ONE) ---
+# A) CUDA 12.1 wheels (recommended on modern drivers/GPUs)
+python -m pip install --index-url https://download.pytorch.org/whl/cu121 torch torchvision torchaudio
+
+# B) CUDA 11.8 wheels (for older drivers/GPUs)
+# python -m pip install --index-url https://download.pytorch.org/whl/cu118 torch torchvision torchaudio
+
+# C) CPU-only (no GPU)
+# python -m pip install torch torchvision torchaudio
+
+# --- Install your project dependencies WITHOUT overriding torch/torchvision/torchaudio ---
+grep -vE '^(torch|torchvision|torchaudio)(==|>=|~=|$)' requirements.txt > requirements_notorch.txt
+python -m pip install -r requirements_notorch.txt
+
+# --- Verify the stack (CUDA availability, device, simple matmul) ---
+python - <<'PY'
+import platform, torch
+print("Python:", platform.python_version())
+print("Torch:", torch.__version__)
+print("Built with CUDA:", torch.version.cuda)
+print("CUDA available:", torch.cuda.is_available())
+if torch.cuda.is_available():
+    print("Device 0:", torch.cuda.get_device_name(0))
+    x = torch.randn(2048,2048, device='cuda')
+    y = torch.randn(2048,2048, device='cuda')
+    z = (x @ y).sum()
+    torch.cuda.synchronize()
+    print("CUDA matmul OK")
+PY
+
+# --- Optional: verify cuDNN and torchvision load ---
+python - <<'PY'
+import torch, torchvision
+print("cuDNN version:", torch.backends.cudnn.version())
+print("TorchVision:", torchvision.__version__)
+from torchvision.ops import nms
+print("torchvision.ops OK")
+PY
+
+# --- Optional: check NVIDIA driver package (Ubuntu) ---
+apt list --installed 2>/dev/null | grep -E 'nvidia-driver|nvidia-kernel'
+
+# --- Optional: see recommended driver and install it (Ubuntu; requires reboot) ---
+# sudo apt update
+# ubuntu-drivers devices
+# sudo ubuntu-drivers autoinstall
+# sudo reboot
