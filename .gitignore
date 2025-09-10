@@ -17,3 +17,15 @@ __pycache__/
 
 *:Zone.Identifier
 *.bak*
+
+# Backups/ADS
+*.bak*
+*:Zone.Identifier
+# LaTeX build
+paper/build/
+*.aux *.bbl *.bcf *.blg *.log *.out *.run.xml *.synctex.gz *.toc *.lof *.lot
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.ipynb_checkpoints/
